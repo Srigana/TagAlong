@@ -6,13 +6,17 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-producer = Producer({
-    'bootstrap.servers': os.getenv("KAFKA_BOOTSTRAP_SERVERS")
-})
+try:
+    producer = Producer({
+        'bootstrap.servers': os.getenv("KAFKA_BOOTSTRAP_SERVERS", "localhost:9092")
+    })
+except Exception as e:
+    print(f"Kafka not available: {e}")
+    producer = None
 
 def publish(topic: str, event: dict):
-    producer.produce(
-        topic,
-        json.dumps(event).encode("utf-8")
-    )
+    if producer is None:
+        print(f"Kafka unavailable, skipping event: {topic}")
+        return
+    producer.produce(topic, json.dumps(event).encode("utf-8"))
     producer.flush()

@@ -4,3 +4,6 @@ psycopg2-binary
 redis
 python-dotenv
 confluent-kafka
+stripe
+python-jose[cryptography]
+passlib[bcrypt]
