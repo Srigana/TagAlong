@@ -4,7 +4,7 @@ Find people heading your way. Share the ride, split the cost.
 
 ## What it does
 
-TagAlong connects people going to the same destination. Instead of driving alone or paying full Uber prices, you find a neighbor already heading to Costco, the airport, or wherever — and tag along. Posters earn, requesters save. Everyone wins.
+TagAlong connects people going to the same destination. Instead of driving alone or paying full Uber prices, you find a neighbor already heading to Costco, the airport, or wherever and tag along. Posters earn, requesters save. Everyone wins.
 
 ## How it works
 
