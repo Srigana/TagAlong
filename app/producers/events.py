@@ -18,5 +18,9 @@ def publish(topic: str, event: dict):
     if producer is None:
         print(f"Kafka unavailable, skipping event: {topic}")
         return
-    producer.produce(topic, json.dumps(event).encode("utf-8"))
-    producer.flush()
+    try:
+        producer.produce(topic, json.dumps(event).encode("utf-8"))
+        producer.flush(timeout=1)  # 1 second timeout instead of blocking forever
+    except Exception as e:
+        print(f"Kafka publish failed: {e}")
+
