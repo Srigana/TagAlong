@@ -20,7 +20,7 @@ def publish(topic: str, event: dict):
         return
     try:
         producer.produce(topic, json.dumps(event).encode("utf-8"))
-        producer.flush(timeout=1)  # 1 second timeout instead of blocking forever
+        producer.flush(timeout=1)  
     except Exception as e:
         print(f"Kafka publish failed: {e}")
 
