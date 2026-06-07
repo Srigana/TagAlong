@@ -4,13 +4,14 @@ import { loadStripe } from "@stripe/stripe-js"
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
+const API = import.meta.env.VITE_API_URL || "http://localhost:8000"
 
 function PaymentForm({ post, fare, onSuccess, onCancel }) {
   const stripe = useStripe()
   const elements = useElements()
 
   const handlePay = async () => {
-    const response = await fetch("http://localhost:8000/create-payment-intent", {
+    const response = await fetch(`${API}/create-payment-intent`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ amount: parseFloat(fare), post_id: post.id })
@@ -61,21 +62,21 @@ function App() {
   const [chatSocket, setChatSocket] = useState(null)
 
 const fetchMyPostRequests = async () => {
-  const response = await fetch(`http://localhost:8000/my-post-requests/${currentUser}`)
+  const response = await fetch(`${API}/my-post-requests/${currentUser}`)
   const data = await response.json()
   setMyPostRequests(data)
   setView("post-requests")
 }
 
 const fetchProfile = async () => {
-  const response = await fetch(`http://localhost:8000/profile/${currentUser}`)
+  const response = await fetch(`${API}/profile/${currentUser}`)
   const data = await response.json()
   setUserProfile(data)
   setView("profile")
 }
 
 const acceptRequest = async (requestId) => {
-  const response = await fetch(`http://localhost:8000/requests/${requestId}/status`, {
+  const response = await fetch(`${API}/requests/${requestId}/status`, {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ status: "accepted" })
@@ -95,7 +96,7 @@ const [newPost, setNewPost] = useState({
 })
 
 const searchPosts = async () => {
-  const response = await fetch(`http://localhost:8000/posts?destination=${destination}`)
+  const response = await fetch(`${API}/posts?destination=${destination}`)
   const data = await response.json()
   setPosts(data)
   setView("results")
@@ -110,7 +111,7 @@ const searchPosts = async () => {
 
 const createPost = async () => {
   navigator.geolocation.getCurrentPosition(async (pos) => {
-    const response = await fetch("http://localhost:8000/posts", {
+    const response = await fetch(`${API}/posts`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -132,7 +133,7 @@ const createPost = async () => {
 
 const handleAuth = async () => {
   const url = authMode === "login" ? "/login" : "/signup"
-  const response = await fetch(`http://localhost:8000${url}`, {
+  const response = await fetch(`${API}${url}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(authForm)
@@ -154,7 +155,7 @@ const requestSpot = async (postId) => {
     setShowAuth(true)
     return
   }
-  const response = await fetch("http://localhost:8000/requests", {
+  const response = await fetch(`${API}/requests`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -187,14 +188,14 @@ const calculateFare = (lat1, lng1, lat2, lng2) => {
 }
 
 const fetchMyTrips = async () => {
-  const response = await fetch(`http://localhost:8000/my-trips/${currentUser}`)
+  const response = await fetch(`${API}/my-trips/${currentUser}`)
   const data = await response.json()
   setMyTrips(data)
   setView("trips")
 }
 
 const submitRating = async (tripRequestId, score, posterId) => {
-  const response = await fetch("http://localhost:8000/ratings", {
+  const response = await fetch(`${API}/ratings`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -217,7 +218,8 @@ const openChat = (requestId) => {
   setMessages([])
   setView("chat")
   
-  const ws = new WebSocket(`ws://localhost:8000/chat/${requestId}/${currentUser}`)
+  const wsUrl = API.replace('https', 'wss').replace('http', 'ws')
+  const ws = new WebSocket(`${wsUrl}/chat/${requestId}/${currentUser}`)
   
   ws.onopen = () => {
     console.log("WebSocket connected")
