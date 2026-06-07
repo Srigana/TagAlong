@@ -4,20 +4,9 @@ from app.api import users, posts, requests, status, auth, trips, payments, ratin
 
 
 app = FastAPI(title="Tagalong")
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=[
-        "http://localhost:5173",
-        "https://tag-along-blue.vercel.app"
-    ],
+    allow_origins=["*"],
     allow_methods=["*"],
     allow_headers=["*"],
 )
