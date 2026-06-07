@@ -45,4 +45,4 @@ Add a `.env` file based on `.env.example` with your own keys.
 
 ## What I built
 
-This isn't just a CRUD app. It uses Kafka to decouple services - when a request is made, an event is published and a consumer updates the post's available slots independently. Redis caches search results with automatic invalidation when new posts are created. Payments are held on request and released on acceptance. Chat runs over WebSockets for real-time coordination.
+Kafka handles events between services, a request triggers a consumer that updates slot availability independently of the API. Redis caches search results per destination and invalidates on new posts. Stripe holds payment on request, releases on acceptance. Chat is real-time over WebSockets.
